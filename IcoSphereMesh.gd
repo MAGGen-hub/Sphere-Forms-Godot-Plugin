@@ -73,6 +73,21 @@ class_name IcoSphereMesh extends ArrayMesh
 #                    0                                                          
 #endregion
 
+@export var UV2 := false : 
+	set(value):
+		UV2 = value
+		update_mesh()
+
+@export var flip_faces := false :
+	set(value):
+		flip_faces = value
+		update_mesh()
+		
+@export var tangent := false :
+	set(value):
+		flip_faces = value
+		update_mesh()
+
 #region Constants
 # base position coords [created with formula: phi = (1 + sqrt(5))/2 ]
 const Y = 0.44721364974976
@@ -189,17 +204,44 @@ func update_mesh(arrays:=[]):
 			fix_poles()
 	## Convert tiangles to PoolIntArray
 	var triangles_pi : PackedInt32Array = []
-	for triangle in triangles:
-		triangles_pi.push_back(triangle[0])
-		triangles_pi.push_back(triangle[1])
-		triangles_pi.push_back(triangle[2])
+	if flip_faces:
+		for triangle in triangles:
+			triangles_pi.push_back(triangle[0])
+			triangles_pi.push_back(triangle[2])
+			triangles_pi.push_back(triangle[1])
+	else:
+		for triangle in triangles:
+			triangles_pi.push_back(triangle[0])
+			triangles_pi.push_back(triangle[1])
+			triangles_pi.push_back(triangle[2])
 	## Initialize the ArrayMesh.
 	arrays.resize(ArrayMesh.ARRAY_MAX)
 	arrays[ArrayMesh.ARRAY_VERTEX] = apply_size()# Auto scale vertices
 	arrays[ArrayMesh.ARRAY_INDEX] = triangles_pi
 	if _uv_type != 2: ##Disable UV mapping for custom UVW mode
 		arrays[ArrayMesh.ARRAY_TEX_UV]= uvs.duplicate()
-	arrays[ArrayMesh.ARRAY_NORMAL]= vertices.duplicate()#normals here are equal to vertices
+		if UV2:
+			arrays[ArrayMesh.ARRAY_TEX_UV2] = uvs.duplicate()
+
+	if flip_faces:
+		var normals : PackedVector3Array = vertices.duplicate()
+		var index := 0
+		for normal in normals:
+			normals[index] = -normal
+			index += 1
+		arrays[ArrayMesh.ARRAY_NORMAL] = normals
+	else:
+		arrays[ArrayMesh.ARRAY_NORMAL] = vertices.duplicate()#normals here are equal to vertices
+		
+	if tangent:
+		var tangents := PackedFloat32Array()
+		for vertex in vertices:
+			var tangent_v = Vector3(-vertex.z, 0, vertex.x).normalized()
+			if tangent_v.length_squared() < 0.001:
+				tangent_v = Vector3(1, 0, 0)
+			tangents.append_array([tangent_v.x, tangent_v.y, tangent_v.z, 1.0])
+		arrays[ArrayMesh.ARRAY_TANGENT] = tangents
+	
 	## Create the Mesh
 	add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
 	## Regen materials

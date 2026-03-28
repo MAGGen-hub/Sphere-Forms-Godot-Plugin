@@ -3,12 +3,12 @@
 importer="image"
 type="Image"
 uid="uid://cq6i0xc6ffjnr"
-path="res://.godot/imported/uv_modes_preview.png-8f56b9f1a56dcb2850e97815a9be8794.image"
+path="res://.godot/imported/uv_modes_preview.png-24ee2f5adbf1500d88f909746bfecbfa.image"
 
 [deps]
 
-source_file="res://previews/uv_modes_preview.png"
-dest_files=["res://.godot/imported/uv_modes_preview.png-8f56b9f1a56dcb2850e97815a9be8794.image"]
+source_file="res://addons/Sphere-Forms-Godot-Plugin/previews/uv_modes_preview.png"
+dest_files=["res://.godot/imported/uv_modes_preview.png-24ee2f5adbf1500d88f909746bfecbfa.image"]
 
 [params]
 

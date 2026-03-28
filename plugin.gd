@@ -27,6 +27,7 @@ extends EditorPlugin
 # Coment lines in _enter_tree and _exit_tree that 
 # related to Mesh you desided not to install to make plugin work again.
 
+"""
 func _enter_tree() -> void:
 	add_custom_type("IcoSphereMesh", "ArrayMesh", preload("IcoSphereMesh.gd"), preload("IcoSphereMesh.svg"))
 	add_custom_type("OctaSphereMesh", "ArrayMesh", preload("OctaSphereMesh.gd"), preload("OctaSphereMesh.svg"))
@@ -36,3 +37,4 @@ func _exit_tree() -> void:
 	remove_custom_type("IcoSphereMesh")
 	remove_custom_type("OctaSphereMesh")
 	remove_custom_type("CubeSphereMesh")
+"""
